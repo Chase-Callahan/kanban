@@ -85,7 +85,7 @@ defmodule KanbanWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import KanbanWeb.CoreComponents
-      import KanbanWeb.Gettext
+      use Gettext, backend: Kanban.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
