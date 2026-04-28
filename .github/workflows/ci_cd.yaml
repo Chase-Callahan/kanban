@@ -7,13 +7,14 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-22.04
-    name: Compile with mix test & format
+    name: Compile with mix test, format, & dialyzer
     env:
       MIX_ENV: test
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Elixir
+        id: setup-beam
         uses: erlef/setup-beam@v1.17.3
         with:
           version-file: .tool-versions
@@ -41,3 +42,18 @@ jobs:
 
       - name: Checks formatting
         run: mix format --check-formatted
+
+      - name: Cache dialyzer plts
+        uses: actions/cache@v4
+        id: cache-plts
+        env:
+          EX_OTP_VERSIONS: ${{ steps.setup-beam.outputs.elixir-version }}
+          KEY_BASE: plt-${{ runner.os }}-${{ env.EX_OTP_VERSIONS }}
+        with:
+          path: priv/plts
+          key: ${{ env.KEY_BASE }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ env.KEY_BASE }}-
+
+      - name: Run Dialyzer
+        run: mix dialyzer --format github
