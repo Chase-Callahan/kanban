@@ -7,7 +7,7 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-22.04
-    name: Compile with mix test
+    name: Compile with mix test & format
     env:
       MIX_ENV: test
     steps:
@@ -38,3 +38,6 @@ jobs:
 
       - name: Run tests
         run: mix test --max-failures 1 --trace --warnings-as-errors
+
+      - name: Checks formatting
+        run: mix format --check-formatted
