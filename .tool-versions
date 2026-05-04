@@ -8,3 +8,4 @@ packer 1.9.0
 age 1.1.1
 jq 1.7
 sops 3.8.1
+act 0.2.87

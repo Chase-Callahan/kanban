@@ -13,11 +13,13 @@ plugins=(
     "jq"
     "age"
     "sops"
+    "act"
 )
 
 for plugin in "${plugins[@]}"; do
     # "|| true ignores errors when installing pre-existing plugins
     asdf plugin-add "$plugin" || true
+    asdf install "$plugin"
 done
 
 echo "Installation complete."

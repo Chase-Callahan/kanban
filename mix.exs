@@ -18,6 +18,10 @@ defmodule Kanban.MixProject do
     ]
   end
 
+  def cli() do
+    [preferred_cli_env: [ci: :test, "ci.local": :test]]
+  end
+
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
@@ -68,7 +72,8 @@ defmodule Kanban.MixProject do
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
+      ci: ["cmd act -j ci"]
     ]
   end
 end
