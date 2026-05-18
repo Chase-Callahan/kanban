@@ -11,10 +11,11 @@ defmodule Kanban.MixProject do
       aliases: aliases(),
       deps: deps(),
       dialyzer: [
-        plt_core_path: "priv/plts/core.plt",
-        plt_file: {:no_warn, "priv/plts/project.plt"},
-        plt_add_apps: [:ex_unit]
-      ]
+              plt_core_path: "priv/plts/core.plt",
+              plt_file: {:no_warn, "priv/plts/project.plt"},
+              plt_add_apps: [:ex_unit]
+            ]
+
     ]
   end
 
@@ -28,6 +29,11 @@ defmodule Kanban.MixProject do
     ]
   end
 
+
+    def cli() do
+      [preferred_cli_env: [ci: :test, "ci.local": :test]]
+    end
+
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
@@ -38,6 +44,9 @@ defmodule Kanban.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.7.0"},
+      {:phoenix_ecto, "~> 4.4"},
+      {:ecto_sql, "~> 3.6"},
+      {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.18.16"},
@@ -54,6 +63,7 @@ defmodule Kanban.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+
     ]
   end
 
@@ -65,7 +75,10 @@ defmodule Kanban.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "assets.setup", "assets.build"],
+      setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
