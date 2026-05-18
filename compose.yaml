@@ -1,0 +1,39 @@
+services:
+  web:
+    image: ${WEB_IMAGE:-ghcr.io/chase-callahan/kanban:latest}
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db/postgres
+      SECRET_KEY_BASE: iFZnziddi7Ufi0J1wdyEEtshHOgDey2UeTgwMCDq77t4mO7xs2gdLmsWBAxY+mcL
+      PHX_HOST: localhost
+    ports:
+      - 4000:4000
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 5s
+        window: 120s
+    depends_on:
+      - db
+    command: bash -c "/app/bin/migrate && /app/bin/server"
+
+  db:
+    image: postgres:15.2
+    healthcheck:
+      test: ["CMD", "pg_isready", "--username=postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+    environment:
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT:-5432}
+
+volumes:
+  db_data:
