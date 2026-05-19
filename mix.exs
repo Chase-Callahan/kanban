@@ -11,11 +11,10 @@ defmodule Kanban.MixProject do
       aliases: aliases(),
       deps: deps(),
       dialyzer: [
-              plt_core_path: "priv/plts/core.plt",
-              plt_file: {:no_warn, "priv/plts/project.plt"},
-              plt_add_apps: [:ex_unit]
-            ]
-
+        plt_core_path: "priv/plts/core.plt",
+        plt_file: {:no_warn, "priv/plts/project.plt"},
+        plt_add_apps: [:ex_unit]
+      ]
     ]
   end
 
@@ -29,10 +28,9 @@ defmodule Kanban.MixProject do
     ]
   end
 
-
-    def cli() do
-      [preferred_cli_env: [ci: :test, "ci.local": :test]]
-    end
+  def cli() do
+    [preferred_cli_env: [ci: :test, "ci.local": :test]]
+  end
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -63,7 +61,6 @@ defmodule Kanban.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
-
     ]
   end
 
