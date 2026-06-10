@@ -1,3 +1,6 @@
+include:
+  - adminer-compose.yaml
+
 services:
   web:
     image: ${WEB_IMAGE:-ghcr.io/chase-callahan/kanban:latest}
